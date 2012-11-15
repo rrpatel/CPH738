@@ -29,7 +29,7 @@ def processObj(line):
 
 	for i in range(1,len(tokens[0].strip().split())):
 		objective +=  tokens[0].strip().split()[i]
-		if( temp != tokens[0].strip().split()[len(tokens[0].strip().split())-1] ):
+		if( tokens[0].strip().split()[i] != tokens[0].strip().split()[len(tokens[0].strip().split())-1] ):
 			objective += " "
 	##  print objective
 
