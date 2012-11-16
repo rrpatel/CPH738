@@ -30,6 +30,15 @@ def processObj(line):
        
 
 
+def sanitizeQuery(query):
+	query = query.replace("\"","   ")
+	query = query.replace("+"," ")
+	##  print "Sanitized ......................................................................    "
+	##  print query
+	return query
+
+
+
 	
 """
    formatQuery(href): Function parses href
@@ -41,9 +50,13 @@ def processObj(line):
 
 def formatQuery(href):
 	href = href.replace("http://www.ncbi.nlm.nih.gov/pubmed?term=","")
+	href = urllib.unquote(href)
 	href = href.replace("%22","\"")
 	
-	seenParen = 0
+	if (href[0] != '('):
+		seenParen = 1
+	else:
+		seenParen = 0
 	
 	query = ""
 
@@ -54,16 +67,22 @@ def formatQuery(href):
 			seenParen += 1
 		if(seenParen!=0):
 			query += href[i]
+		elif( len(query) > 15 ):		
+			break
 		
 	query += ')'
 
 	##  print query
-	return query
+	return sanitizeQuery(query)
 
 
 def getPubMedQuery(webLink):
     f = urllib.urlopen(webLink)
-
+    ##  print f
+    if not f :
+	print "Can not open " + webLink
+	##  break
+    
     soup = BeautifulSoup(f)
 
     title = ""
